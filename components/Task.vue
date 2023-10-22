@@ -17,6 +17,9 @@
             <option value="Done">Done</option>
           </select>
         </div>
+        <button @click="handleDele(item?.id)" class=" shadow-md p-2 w-[80px] text-12 rounded-xl bg-[#c91a28] text-[#fff]">
+          Delete
+        </button>
       </div>
     </div>
   </template>
@@ -48,6 +51,9 @@
      handleChange(item,event){
       console.log(item,event?.target.value)
       this.$store.dispatch('tasks/updateTaskStatus',{task:item,newStatus:event?.target.value})
+     },
+    async  handleDele(itemId){
+      await this.$store.dispatch('tasks/deleteTask',itemId)
      }
     },
   };

@@ -1,6 +1,14 @@
 
 <template>
   <div class="mx-auto p-8 ">
+
+   <div class=" flex justify-end">
+    <button v-if="!user?.email" class=" bg-[#ebacac] p-4 w-[200px] rounded-xl shadow-md" @click="signInWithGoogle">Sign in with Google
+    </button>
+    
+      <img :src="user?.logo" class=" rounded-[50%] h-[64px] w-[64px] object-contain" v-else/>
+
+  </div> 
     <div class="flex w-full items-center justify-center">
       <select class=" border rounded-md p-2"  v-model="status"  required>
         <option value="All">All</option>
@@ -8,7 +16,7 @@
         <option value="In Progress">In Progress</option>
         <option value="Done">Done</option>
       </select>
-      <button @click="handleClick(true)" class=" rounded-md bg-[#e5f7ff] p-3 ml-5 cursor-pointer">
+      <button @click="handleClick(true)" class=" shadow-md w-[120px] rounded-md bg-[#e5f7ff] p-3 ml-5 cursor-pointer">
         Create
       </button>
     </div>
@@ -44,7 +52,8 @@ export default {
   },
   computed: {
     ...mapState({
-      tasks:state=>state?.tasks?.tasks
+      tasks:state=>state?.tasks?.tasks,
+      user:state=>state?.tasks?.user
     }),
     categories() {
       return ['Todo','In Progress','Done'];
@@ -55,7 +64,7 @@ export default {
     }
   },
   async mounted(){
-    // await  this.$nuxt.dispatch('tasks/GET_TASKS')
+    
     this.$nuxt.$on('close-taskForm',()=>{
       this.showTaskForm = false
     })
@@ -68,8 +77,18 @@ export default {
       } );
     },
     handleClick(val){
+      if(!this.user?.email) return alert('Please Signin to Create Task')
       this.showTaskForm = val
-    }
+    },
+    async signInWithGoogle() {
+      try {
+        
+        await this.$store.dispatch('tasks/loginUser')
+        await  this.$store.dispatch('tasks/getTasks')
+      } catch (error) {
+        console.error('Google Sign-In error:', error);
+      }
+    },
   },
 }
 </script>

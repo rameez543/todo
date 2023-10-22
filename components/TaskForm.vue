@@ -45,12 +45,12 @@ export default {
             if(this.title && this.desc){
                 this.error = ''
                 const payload = {
-                    id:Date.now(),
+                    // id:Date.now(),
                     title:this.title,
                     status:this.status,
                     desc:this.desc
                 }
-                this.$store.commit('tasks/addTask',payload)
+                this.$store.dispatch('tasks/createTask',payload)
                 this.handleClose()
             }
             else{
